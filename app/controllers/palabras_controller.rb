@@ -1,5 +1,6 @@
 class PalabrasController < ApplicationController
   before_action :set_palabra, only: [:show, :update, :destroy]
+  include ActionController::HttpAuthentication::Token::ControllerMethods
   include ActionController::MimeResponds
   before_filter :restrict_access
 
@@ -44,6 +45,7 @@ class PalabrasController < ApplicationController
     def restrict_access
       authenticate_or_request_with_http_token do |token, options|
         ApiKey.exists?(access_token: token)
+      end
     end
 
 
