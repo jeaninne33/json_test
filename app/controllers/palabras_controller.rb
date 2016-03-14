@@ -1,6 +1,7 @@
 class PalabrasController < ApplicationController
   before_action :set_palabra, only: [:show, :update, :destroy]
   include ActionController::MimeResponds
+  before_filter :restrict_access
 
 
   def index
@@ -39,6 +40,12 @@ class PalabrasController < ApplicationController
   end
 
   private
+
+    def restrict_access
+      authenticate_or_request_with_http_token do |token, options|
+        ApiKey.exists?(access_token: token)
+    end
+
 
     def set_palabra
       @palabra = Palabra.find(params[:id])
